@@ -37,6 +37,7 @@ Route::prefix("/api")->group(function(){
         Route::get("/detail",[WorkApi::class,'getById']);
         Route::post("/",[WorkApi::class,'create']);
         Route::post("/update",[WorkApi::class,'update']);
+        Route::get("/delete",[WorkApi::class,'delete']);
     });
 });
 

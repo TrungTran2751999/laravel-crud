@@ -18,7 +18,7 @@ use DB;
 class WorkService extends Controller
 {
     public static function getAll(){
-        return Work::all();
+        return Work::orderByDesc("id")->get();
     }
     public static function getById($id){
         $work = Work::where("id",$id)->first();
@@ -52,5 +52,10 @@ class WorkService extends Controller
         }else{
             return response("NOT FOUND", 404);
         }
+    }
+    public static function delete($id){
+        $work = Work::where("id",$id)->first();
+        if($work!=null) $work->delete();
+        return response("OK",200);
     }
 }

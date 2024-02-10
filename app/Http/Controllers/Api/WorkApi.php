@@ -15,12 +15,16 @@ class WorkApi extends Controller
     }
     public function getById(Request $request){
         $id = $request->input("id");
-        return WorkService::getAll($id);
+        return WorkService::getById($id);
     }
     public function create(Request $request){
         return WorkService::create($request);
     }
     public function update(Request $request){
         return WorkService::update($request);
+    }
+    public function delete(Request $request){
+        $id = $request->input("id");
+        return WorkService::delete($id);
     }
 }
