@@ -9,6 +9,8 @@ use Storage;
 use Cloudder;
 use App\Models\Image;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+
 class UtilService extends Controller
 {
     public static function upload($file){
@@ -29,5 +31,34 @@ class UtilService extends Controller
     public static function getAll(){
         $path = Storage::disk('google')->listContents("/", false);
         return $path;
+    }
+    public static function sendNotificate($title, $content, $arrDeviceToken){
+        for($i=0; $i<count($arrDeviceToken); $i++){
+            $response = Http::withHeaders([
+                'Content-Type'=> 'application/json; charset=UTF-8',
+                'Authorization'=>env("CLOUND_FIREBASE")
+            ])->post('https://fcm.googleapis.com/fcm/send', [
+                'to'=>$arrDeviceToken[$i]["deviceToken"],
+                'priority'=>'high',
+                'notification'=>[
+                    'title'=> $title,
+                    'body'=>$content
+                ],
+                'data'=>[
+                    'id'=>"1",
+                    "name"=>"fuckkkk"
+                ]
+            ]);
+            // if ($response->successful()) {
+            //     $data = $response->json();
+            //     return $data;
+            // } else {
+            //     // Handle the API error
+            //     $statusCode = $response->status();
+            //     $errorMessage = $response->body();
+            //     return $errorMessage;
+            //     // ...
+            // }
+        }
     }
 }

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Service\UserService;
 use DB;
 
 class WorkService extends Controller
@@ -32,11 +34,16 @@ class WorkService extends Controller
         $validate = $request->validate([
             "name"=>"required"
         ]);
+        $name = $request->input("name");
         $maxId = Work::max("id");
         $work = new Work();
         $work->id = $maxId+1;
-        $work->name = $request->input("name");
+        $work->name = $name;
         $work->save();
+
+        $listDeviceToken = UserService::getDeviceToken();
+        UtilService::sendNotificate("Thông báo", "Công việc ".$name." được thêm vào", $listDeviceToken);
+
         return response("SUCCESS", 200);
     }
     public static function update($request){
@@ -46,8 +53,12 @@ class WorkService extends Controller
         ]);
         $work = Work::where("id",$request->input("id"))->first();
         if($work!=null){
+            $oldName = $work->name;
             $work->name = $request->input("name");
             $work->save();
+
+            $listDeviceToken = UserService::getDeviceToken();
+            UtilService::sendNotificate("Thông báo", "Công việc ".$oldName." được đổi thành".$request->input("name"), $listDeviceToken);
             return response($work, 200);
         }else{
             return response("NOT FOUND", 404);
@@ -58,4 +69,10 @@ class WorkService extends Controller
         if($work!=null) $work->delete();
         return response("OK",200);
     }
+    public static function sendNotificate(){
+        $listDeviceToken = UserService::getDeviceToken();
+        $res = UtilService::sendNotificate("Thông báo", "cccc", $listDeviceToken);
+        return response("ok");
+    }
+   
 }

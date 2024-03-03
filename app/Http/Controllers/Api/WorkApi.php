@@ -27,4 +27,7 @@ class WorkApi extends Controller
         $id = $request->input("id");
         return WorkService::delete($id);
     }
+    public function sendNotificate(){
+        return WorkService::sendNotificate();
+    }
 }

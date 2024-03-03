@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Blog;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
@@ -24,23 +23,11 @@ class User extends Authenticatable implements JWTSubject
     public $timestamps = false;
     protected $fillable = [
         'id',
-        'guid',
         'userName',
         'name',
         'password',
-        'email',
-        'position',
-        'coporation',
-        'roleId',
-        'imageId',
-        'createdAt',
-        'updatedAt',
-        'createdBy',
-        'updatedBy'
+        'deviceToken'
     ];
-    public function blog(){
-        return $this->hasMany(Blog::class);
-    }
 
     /**
      * The attributes that should be hidden for serialization.
